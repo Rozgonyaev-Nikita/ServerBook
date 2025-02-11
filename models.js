@@ -1,112 +1,112 @@
 import mongoose from 'mongoose';
 
-const AuthorSchema = new Schema({//+
-    LastName: { type: String, maxlength: 20, required: true },
-    FirstName: { type: String, maxlength: 20, required: true }
+const AuthorSchema = new mongoose.Schema({//+
+    lastName: { type: String, maxlength: 20, required: true },
+    firstName: { type: String, maxlength: 20, required: true }
 });
 
 
-const BookLibrarySchema = new Schema({//+
-    IdAuthor: { type: mongoose.Schema.Types.ObjectId, ref: 'Author', required: true },
-    BookName: { type: String, maxlength: 50, required: true },
-    Note: { type: String, maxlength: 50 }
+const BookLibrarySchema = new mongoose.Schema({//+
+    idAuthor: { type: mongoose.Schema.Types.ObjectId, ref: 'Author', required: true },
+    bookName: { type: String, maxlength: 50, required: true },
+    note: { type: String, maxlength: 50 }
 });
 
-const UserSchema = new Schema({//+
-    FirstName: { type: String, maxlength: 25, required: true },
-    LastName: { type: String, maxlength: 50, required: true },
-    SecondName: { type: String, maxlength: 25 },
-    Email: { type: String, maxlength: 25, unique: true, required: true },
-    UserName: { type: String, maxlength: 20, unique: true, required: true },
-    Password: { type: String, maxlength: 15, required: true },
-    Rating: { type: Number, default: 0 },
-    CreatedAt: { type: Date, default: Date.now },
-    Avatar: { type: Buffer },
-    Enabled: { type: Boolean, default: true },
-    IsStaff: { type: Boolean, default: false },
-    IsSuperUser: { type: Boolean, default: false }
+const UserSchema = new mongoose.Schema({//+
+    firstName: { type: String, maxlength: 25, required: true },
+    lastName: { type: String, maxlength: 50, required: true },
+    secondName: { type: String, maxlength: 25 },
+    email: { type: String, maxlength: 25, unique: true, required: true },
+    userName: { type: String, maxlength: 20, unique: true, required: true },
+    password: { type: String, required: true },
+    rating: { type: Number, default: 0 },
+    createdAt: { type: Date, default: Date.now },
+    avatar: { type: Buffer },
+    enabled: { type: Boolean, default: true },
+    isStaff: { type: Boolean, default: false },
+    isSuperUser: { type: Boolean, default: false }
 });
 
-const UserAddressSchema = new Schema({//+
-    IdUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    AddCountry: { type: String, maxlength: 25 },
-    AddrIndex: { type: String, maxlength: 6 },
-    AddrCity: { type: String, maxlength: 15 },
-    AddrStreet: { type: String, maxlength: 25 },
-    AddrStructure: { type: String, maxlength: 10 },
-    AddrApart: { type: String, maxlength: 3 },
-    IsDefault: { type: Boolean, default: false }
+const UserAddressSchema = new mongoose.Schema({//+
+    idUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    addCountry: { type: String, maxlength: 25 },
+    addrIndex: { type: String, maxlength: 6 },
+    addrCity: { type: String, maxlength: 15 },
+    addrStreet: { type: String, maxlength: 25 },
+    addrStructure: { type: String, maxlength: 10 },
+    addrApart: { type: String, maxlength: 3 },
+    isDefault: { type: Boolean, default: false }
 });
 
-const OfferListSchema = new Schema({//+
-    IdBookLibrary: { type: mongoose.Schema.Types.ObjectId, ref: 'BookLibrary', required: true },
-    IdUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+const OfferListSchema = new mongoose.Schema({//+
+    idBookLibrary: { type: mongoose.Schema.Types.ObjectId, ref: 'BookLibrary', required: true },
+    idUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     IBSN: { type: String, maxlength: 13 },
-    YearPublishing: { type: Date },
-    CreateAt: { type: Date, default: Date.now },
-    UpdateAt: { type: Date },
-    IdStatus: { type: mongoose.Schema.Types.ObjectId, ref: 'Status', required: true }
+    yearPublishing: { type: Date },
+    createAt: { type: Date, default: Date.now },
+    updateAt: { type: Date },
+    idStatus: { type: mongoose.Schema.Types.ObjectId, ref: 'Status', required: true }
 });
 
-const WishListSchema = new Schema({//+
-    IdUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    CreateAt: { type: Date, default: Date.now },
-    UpdateAt: { type: Date },
-    IdStatus: { type: mongoose.Schema.Types.ObjectId, ref: 'Status', required: true },
-    IdUserAddress: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAddress' }
+const WishListSchema = new mongoose.Schema({//+
+    idUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    createAt: { type: Date, default: Date.now },
+    updateAt: { type: Date },
+    idStatus: { type: mongoose.Schema.Types.ObjectId, ref: 'Status', required: true },
+    idUserAddress: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAddress' }
 });
 
-const ExchangeListSchema = new Schema({//+   //ExchangeListSchema?
-    IdOfferList1: { type: mongoose.Schema.Types.ObjectId, ref: 'OfferList', required: true },
-    IdWishList1: { type: mongoose.Schema.Types.ObjectId, ref: 'WishList', required: true },
-    IdOfferList2: { type: mongoose.Schema.Types.ObjectId, ref: 'OfferList', required: true },
-    IdWishList2: { type: mongoose.Schema.Types.ObjectId, ref: 'WishList', required: true },
-    CreateAt: { type: Date, default: Date.now },
-    IsBoth: { type: Boolean, required: true }
+const ExchangeListSchema = new mongoose.Schema({//+   //ExchangeListSchema?
+    idOfferList1: { type: mongoose.Schema.Types.ObjectId, ref: 'OfferList', required: true },
+    idWishList1: { type: mongoose.Schema.Types.ObjectId, ref: 'WishList', required: true },
+    idOfferList2: { type: mongoose.Schema.Types.ObjectId, ref: 'OfferList', required: true },
+    idWishList2: { type: mongoose.Schema.Types.ObjectId, ref: 'WishList', required: true },
+    createAt: { type: Date, default: Date.now },
+    isBoth: { type: Boolean, required: true }
 });
 
-const UserExchangeListSchema = new Schema({//+
-    IdExchangeList: { type: mongoose.Schema.Types.ObjectId, ref: 'ExchangeList', required: true },
-    IdOfferList: { type: mongoose.Schema.Types.ObjectId, ref: 'OfferList', required: true },
-    TrackNumber: { type: String, maxlength: 20 },
-    Receiving: { type: Boolean, default: false }
+const UserExchangeListSchema = new mongoose.Schema({//+
+    idExchangeList: { type: mongoose.Schema.Types.ObjectId, ref: 'ExchangeList', required: true },
+    idOfferList: { type: mongoose.Schema.Types.ObjectId, ref: 'OfferList', required: true },
+    trackNumber: { type: String, maxlength: 20 },
+    receiving: { type: Boolean, default: false }
 });
 
-const UserListSchema = new Schema({//---------------------- ref куда?
-    TypeList: { type: Number, required: true },
+const UserListSchema = new mongoose.Schema({//---------------------- ref куда?
+    typeList: { type: Number, required: true },
     // IdList: { type: mongoose.Schema.Types.ObjectId, required: true }    возможно стоит ссылаться на userScheme
 });
 
-const UserValueCategorySchema = new Schema({//+
-    IdUserList: { type: mongoose.Schema.Types.ObjectId, ref: 'UserList', required: true },
-    IdCategory: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true }
+const UserValueCategorySchema = new mongoose.Schema({//+
+    idUserList: { type: mongoose.Schema.Types.ObjectId, ref: 'UserList', required: true },
+    idCategory: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true }
 });
 
-const CategorySchema = new Schema({//+
-    Name: { type: String, maxlength: 25 },
-    IdParent: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
-    MultiSelect: { type: Boolean, default: false }
+const CategorySchema = new mongoose.Schema({//+
+    name: { type: String, maxlength: 25 },
+    idParent: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
+    multiSelect: { type: Boolean, default: false }
 });
 
-const StatusSchema = new Schema({//+
-    Name: { type: String, maxlength: 10 }
+const StatusSchema = new mongoose.Schema({//+
+    name: { type: String, maxlength: 10 }
 });
 
-const BookResponseSchema = new Schema({//+
-    IdBookLibrary: { type: mongoose.Schema.Types.ObjectId, ref: 'BookLibrary', required: true },
-    IdUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    CreateAt: { type: Date, default: Date.now },
-    Response: { type: String, maxlength: 500 },
-    Note: { type: String, maxlength: 50 }
+const BookResponseSchema = new mongoose.Schema({//+
+    idBookLibrary: { type: mongoose.Schema.Types.ObjectId, ref: 'BookLibrary', required: true },
+    idUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    createAt: { type: Date, default: Date.now },
+    response: { type: String, maxlength: 500 },
+    note: { type: String, maxlength: 50 }
 });
 
-const UserMsgSchema = new Schema({//+
-    IdUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    CreateAt: { type: Date, default: Date.now },
-    Text: { type: String, maxlength: 250 },
-    Notes: { type: String, maxlength: 150 },
-    IdStatus: { type: mongoose.Schema.Types.ObjectId, ref: 'Status' },
-    Type: { type: Number }
+const UserMsgSchema = new mongoose.Schema({//+
+    idUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    createAt: { type: Date, default: Date.now },
+    text: { type: String, maxlength: 250 },
+    notes: { type: String, maxlength: 150 },
+    idStatus: { type: mongoose.Schema.Types.ObjectId, ref: 'Status' },
+    type: { type: Number }
 });
 
 export const Author = mongoose.model('Author', AuthorSchema);
