@@ -13,8 +13,8 @@ const BookLibrarySchema = new mongoose.Schema({//+
 });
 
 const UserSchema = new mongoose.Schema({//+
-    firstName: { type: String, maxlength: 25, required: true },
-    lastName: { type: String, maxlength: 50, required: true },
+    firstName: { type: String, maxlength: 25 },
+    lastName: { type: String, maxlength: 50 },
     secondName: { type: String, maxlength: 25 },
     email: { type: String, maxlength: 25, unique: true, required: true },
     userName: { type: String, maxlength: 20, unique: true, required: true },
