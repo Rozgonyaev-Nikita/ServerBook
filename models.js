@@ -82,10 +82,15 @@ const UserValueCategorySchema = new mongoose.Schema({//+
     idCategory: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true }
 });
 
+// const CategorySchema = new mongoose.Schema({//+
+//     name: { type: String, maxlength: 25 },
+//     idParent: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
+//     multiSelect: { type: Boolean, default: false }
+// });
+
 const CategorySchema = new mongoose.Schema({//+
-    name: { type: String, maxlength: 25 },
-    idParent: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
-    multiSelect: { type: Boolean, default: false }
+    genre:  [{ type: String, maxlength: 25 }],
+    condition: { type: Boolean, default: false }
 });
 
 const StatusSchema = new mongoose.Schema({//+

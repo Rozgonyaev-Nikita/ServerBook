@@ -58,3 +58,27 @@ export const register = async (req, res) => {
     res.status(500).send("Something went wrong");
   }
 };
+
+export const exchangeBook = async (req, res) => {
+  try {
+    const { author_surname, author_name, book_title, isbn, year, genre, condition } = req.body;
+
+    const author = new Author({ lastName: author_surname, firstName: author_name });
+    await author.save();
+
+    const bookLibrary = new BookLibrary({ idAuthor: author._id, bookName: book_title });
+    await bookLibrary.save();
+
+    const offerList = new OfferList({
+        idBookLibrary: bookLibrary._id,
+        IBSN: isbn,
+        yearPublishing: new Date(year)  // Assuming year is a number like 2023
+        // You might need to pass idUser and idStatus depending on your requirements
+    });
+    await offerList.save();
+
+    res.status(201).json({ message: 'Offer created successfully', offerList });
+} catch (error) {
+    res.status(500).json({ message: 'Error creating offer', error });
+}
+};
