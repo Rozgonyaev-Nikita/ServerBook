@@ -38,6 +38,7 @@ const UserAddressSchema = new mongoose.Schema({//+
     isDefault: { type: Boolean, default: false }
 });
 
+
 const OfferListSchema = new mongoose.Schema({//+
     idBookLibrary: { type: mongoose.Schema.Types.ObjectId, ref: 'BookLibrary', required: true },
     idUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -107,6 +108,17 @@ const BookResponseSchema = new mongoose.Schema({//+
 
 const UserMsgSchema = new mongoose.Schema({//+
     idUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    createAt: { type: Date, default: Date.now },
+    text: { type: String, maxlength: 250 },
+    notes: { type: String, maxlength: 150 },
+    idStatus: { type: mongoose.Schema.Types.ObjectId, ref: 'Status' },
+    type: { type: Number }
+});
+
+//RandomBookSchema
+const RandomBookSchem = new mongoose.Schema({//+
+    idUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    idBook: { type: mongoose.Schema.Types.ObjectId, ref: 'Book', required: true },
     createAt: { type: Date, default: Date.now },
     text: { type: String, maxlength: 250 },
     notes: { type: String, maxlength: 150 },
