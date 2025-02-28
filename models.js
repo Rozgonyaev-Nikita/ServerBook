@@ -37,16 +37,7 @@ const UserAddressSchema = new mongoose.Schema({//+
     addrApart: { type: String, maxlength: 3 },
     isDefault: { type: Boolean, default: false }
 });
-const UserAddressSchema = new mongoose.Schema({//+
-    idUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    addCountry: { type: String, maxlength: 25 },
-    addrIndex: { type: String, maxlength: 6 },
-    addrCity: { type: String, maxlength: 15 },
-    addrStreet: { type: String, maxlength: 25 },
-    addrStructure: { type: String, maxlength: 10 },
-    addrApart: { type: String, maxlength: 3 },
-    isDefault: { type: Boolean, default: false }
-});
+
 
 const OfferListSchema = new mongoose.Schema({//+
     idBookLibrary: { type: mongoose.Schema.Types.ObjectId, ref: 'BookLibrary', required: true },
