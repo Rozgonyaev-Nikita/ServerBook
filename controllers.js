@@ -7,7 +7,7 @@ export const login = async (req, res) => {
 
   try {
     // Находим пользователя по логину
-    const user = await Users.findOne({ userName });
+    const user = await User.findOne({ userName });
 
     if (user) {
       // Сравниваем введённый пароль с хешем, хранящимся в базе данных
@@ -19,11 +19,13 @@ export const login = async (req, res) => {
         res.json(userWithoutPassword);
       } else {
         // Пароли не совпадают
-        res.json(false);
+        res.status(401).json({ message: 'Неверный пароль' });
+        // res.json(false);
       }
     } else {
       // Пользователь не найден
-      res.json(false);
+      // res.json(false);
+      res.status(404).json({ message: 'Пользователь не найден' });
     }
   } catch (error) {
     console.error(error);

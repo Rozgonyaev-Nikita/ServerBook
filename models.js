@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema({//+
     firstName: { type: String, maxlength: 25 },
     lastName: { type: String, maxlength: 50 },
     secondName: { type: String, maxlength: 25 },
-    email: { type: String, maxlength: 25, unique: true, required: true },
+    email: { type: String, maxlength: 35, unique: true, required: true },
     userName: { type: String, maxlength: 25, unique: true, required: true },
     password: { type: String, required: true },
     rating: { type: Number, default: 0 },
