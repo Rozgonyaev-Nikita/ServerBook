@@ -47,7 +47,8 @@ const OfferListSchema = new mongoose.Schema({//+
     createAt: { type: Date, default: Date.now },
     updateAt: { type: Date },
     idCategory: [{type: mongoose.Schema.Types.ObjectId, ref: 'Category'}],
-    idStatus: { type: mongoose.Schema.Types.ObjectId, ref: 'Status', required: true }
+    status: { type: String, enum: ['new', 'old'], }
+    // idStatus: { type: mongoose.Schema.Types.ObjectId, ref: 'Status', required: true }
 });
 
 const WishListSchema = new mongoose.Schema({//+
