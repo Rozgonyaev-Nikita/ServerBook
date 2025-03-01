@@ -69,6 +69,11 @@ export const exchangeBook = async (req, res) => {
     const bookLibrary = new BookLibrary({ idAuthor: author._id, bookName: book_title });
     await bookLibrary.save();
 
+    const categorySchema = new CategorySchema({ name: condition });
+    await categorySchema.save();
+
+    
+
     const offerList = new OfferList({
         idBookLibrary: bookLibrary._id,
         IBSN: isbn,

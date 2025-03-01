@@ -46,6 +46,7 @@ const OfferListSchema = new mongoose.Schema({//+
     yearPublishing: { type: Date },
     createAt: { type: Date, default: Date.now },
     updateAt: { type: Date },
+    idCategory: [{type: mongoose.Schema.Types.ObjectId, ref: 'Category'}],
     idStatus: { type: mongoose.Schema.Types.ObjectId, ref: 'Status', required: true }
 });
 
@@ -90,8 +91,8 @@ const UserValueCategorySchema = new mongoose.Schema({//+
 // });
 
 const CategorySchema = new mongoose.Schema({//+
-    genre:  [{ type: String, maxlength: 25 }],
-    condition: { type: Boolean, default: false }
+    category:  { type: String, maxlength: 25 },
+    // condition: { type: Boolean, default: false }
 });
 
 const StatusSchema = new mongoose.Schema({//+
