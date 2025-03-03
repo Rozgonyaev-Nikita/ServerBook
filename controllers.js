@@ -35,6 +35,66 @@ export const login = async (req, res) => {
   console.log(login, password);
 };
 
+export const changeUser = async (req, res) => {
+  try {
+    // const userId = req.params.id; // ID пользователя из параметров маршрута
+    const {
+      idUser,
+        firstName,
+        lastName,
+        secondName,
+        addCountry,
+        addrIndex,
+        addrCity,
+        addrStreet,
+        addrStructure,
+        addrApart,
+    } = req.body; // Извлекаем данные из тела запроса
+
+    // Проверка: существует ли пользователь с указанным ID
+    const user = await User.findById(idUser);
+    if (!user) {
+        return res.status(404).json({ message: "Пользователь не найден" });
+    }
+
+    // Обновление данных пользователя, если переданы новые значения
+    if (firstName) user.firstName = firstName;
+    if (lastName) user.lastName = lastName;
+    if (secondName) user.secondName = secondName;
+
+    // Сохранение обновленных данных пользователя
+    await user.save();
+
+    // Проверяем, существует ли адрес для данного пользователя
+    let userAddress = await UserAddress.findOne({ idUser: idUser });
+    if (!userAddress) {
+        // Если адрес не существует, создаем новый
+        userAddress = new UserAddress({ idUser: idUser });
+    }
+
+    // Обновление данных адреса, если переданы новые значения
+    if (addCountry) userAddress.addCountry = addCountry;
+    if (addrIndex) userAddress.addrIndex = addrIndex;
+    if (addrCity) userAddress.addrCity = addrCity;
+    if (addrStreet) userAddress.addrStreet = addrStreet;
+    if (addrStructure) userAddress.addrStructure = addrStructure;
+    if (addrApart) userAddress.addrApart = addrApart;
+
+    // Сохранение обновленных данных адреса
+    await userAddress.save();
+
+    // Ответ клиенту с обновленными данными
+    res.status(200).json({
+        message: "Данные пользователя успешно обновлены",
+        user,
+        userAddress,
+    });
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Ошибка сервера", error: error.message });
+}
+};
+
 export const register = async (req, res) => {
   try {
     const { firstName, lastName, email, userName, password, ...otherData } = req.body;
@@ -59,31 +119,71 @@ export const register = async (req, res) => {
   }
 };
 
-export const exchangeBook = async (req, res) => {
-  try {
-    const { author_surname, author_name, book_title, isbn, year, genre, condition } = req.body;
+// export const exchangeBook = async (req, res) => {
+//   try {
+//     const { author_surname, author_name, book_title, isbn, year, genre, condition } = req.body;
 
-    const author = new Author({ lastName: author_surname, firstName: author_name });
-    await author.save();
+//     const author = new Author({ lastName: author_surname, firstName: author_name });
+//     await author.save();
 
-    const bookLibrary = new BookLibrary({ idAuthor: author._id, bookName: book_title });
-    await bookLibrary.save();
+//     const bookLibrary = new BookLibrary({ idAuthor: author._id, bookName: book_title });
+//     await bookLibrary.save();
 
-    const categorySchema = new CategorySchema({ name: condition });
-    await categorySchema.save();
+//     const categorySchema = new CategorySchema({ name: condition });
+//     await categorySchema.save();
 
     
 
-    const offerList = new OfferList({
-        idBookLibrary: bookLibrary._id,
-        IBSN: isbn,
-        yearPublishing: new Date(year)  // Assuming year is a number like 2023
-        // You might need to pass idUser and idStatus depending on your requirements
-    });
-    await offerList.save();
+//     const offerList = new OfferList({
+//         idBookLibrary: bookLibrary._id,
+//         IBSN: isbn,
+//         yearPublishing: new Date(year)  // Assuming year is a number like 2023
+//         // You might need to pass idUser and idStatus depending on your requirements
+//     });
+//     await offerList.save();
 
-    res.status(201).json({ message: 'Offer created successfully', offerList });
-} catch (error) {
-    res.status(500).json({ message: 'Error creating offer', error });
-}
+//     res.status(201).json({ message: 'Offer created successfully', offerList });
+// } catch (error) {
+//     res.status(500).json({ message: 'Error creating offer', error });
+// }
+// };
+
+
+export const exchangeBook = async (req, res) => {
+  const { lastName, firstName, bookName, ISBN, yearPublishing, idCategory, idStatus } = req.body;
+
+  // console.log(idStatus)
+    try {
+        // Поиск или создание автора
+        let author = await Author.findOne({ lastName, firstName });
+        if (!author) {
+            author = new Author({ lastName, firstName });
+            await author.save();
+        }
+
+        // Создание записи о книге в библиотеке
+        const bookLibrary = new BookLibrary({
+            idAuthor: author._id,
+            bookName,
+            note: `ISBN: ${ISBN}, Year: ${yearPublishing}`
+        });
+        await bookLibrary.save();
+
+        // Создание записи о предложении
+        const offerList = new OfferList({
+            idBookLibrary: bookLibrary._id,
+            idUser: author._id,
+            IBSN: ISBN,
+            yearPublishing,
+            idCategory: 1, // предполагается, что это массив ID категорий
+            idStatus: 1 // предполагается, что это массив ID категорий
+        });
+
+        await offerList.save();
+
+        return res.status(201).json({ message: 'Книга успешно добавлена для обмена!', offerList });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Ошибка при создании предложения о обмене.', error });
+    }
 };

@@ -116,16 +116,6 @@ const UserMsgSchema = new mongoose.Schema({//+
     type: { type: Number }
 });
 
-//RandomBookSchema
-const RandomBookSchem = new mongoose.Schema({//+
-    idUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    idBook: { type: mongoose.Schema.Types.ObjectId, ref: 'Book', required: true },
-    createAt: { type: Date, default: Date.now },
-    text: { type: String, maxlength: 250 },
-    notes: { type: String, maxlength: 150 },
-    idStatus: { type: mongoose.Schema.Types.ObjectId, ref: 'Status' },
-    type: { type: Number }
-});
 
 export const Author = mongoose.model('Author', AuthorSchema);
 export const BookLibrary = mongoose.model('BookLibrary', BookLibrarySchema);
