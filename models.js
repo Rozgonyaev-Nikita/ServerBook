@@ -42,12 +42,14 @@ const UserAddressSchema = new mongoose.Schema({//+
 const OfferListSchema = new mongoose.Schema({//+
     idBookLibrary: { type: mongoose.Schema.Types.ObjectId, ref: 'BookLibrary', required: true },
     idUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    IBSN: { type: String, maxlength: 13 },
+    IBSN: { type: String, maxlength: 23 },
     yearPublishing: { type: Date },
     createAt: { type: Date, default: Date.now },
     updateAt: { type: Date },
-    idCategory: [{type: mongoose.Schema.Types.ObjectId, ref: 'Category'}],
-    idStatus: { type: mongoose.Schema.Types.ObjectId, ref: 'Status', required: true }
+    // idCategory: [{type: mongoose.Schema.Types.ObjectId, ref: 'Category'}],
+    category:  [{ type: String, maxlength: 25 }],
+    status: { type: String, enum: ['new', 'old'], }
+    // idStatus: { type: mongoose.Schema.Types.ObjectId, ref: 'Status', required: true }
 });
 
 const WishListSchema = new mongoose.Schema({//+

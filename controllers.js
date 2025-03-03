@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import {Author, BookLibrary, BookResponse, Category, ExchangeList, OfferList, Status, User, UserAddress, UserExchangeList, UserList, UserMsg, UserValueCategory, WishList} from './models.js'
+import { Author, BookLibrary, BookResponse, Category, ExchangeList, OfferList, Status, User, UserAddress, UserExchangeList, UserList, UserMsg, UserValueCategory, WishList } from './models.js'
 
 
 export const login = async (req, res) => {
@@ -104,7 +104,7 @@ export const register = async (req, res) => {
     const user = new User({ ...otherData, firstName, lastName, email, userName, password: hashedPassword });
     console.log('user', user)
     const result = await user.save();
-    
+
     if (result) {
       // delete result.password;
       res.send({ ...otherData, firstName, lastName, email, userName, password: hashedPassword });
@@ -122,6 +122,7 @@ export const register = async (req, res) => {
 // export const exchangeBook = async (req, res) => {
 //   try {
 //     const { author_surname, author_name, book_title, isbn, year, genre, condition } = req.body;
+<<<<<<< HEAD
 
 //     const author = new Author({ lastName: author_surname, firstName: author_name });
 //     await author.save();
@@ -186,4 +187,80 @@ export const exchangeBook = async (req, res) => {
         console.error(error);
         return res.status(500).json({ message: 'Ошибка при создании предложения о обмене.', error });
     }
+=======
+
+//     const author = new Author({ lastName: author_surname, firstName: author_name });
+//     await author.save();
+
+//     const bookLibrary = new BookLibrary({ idAuthor: author._id, bookName: book_title });
+//     await bookLibrary.save();
+
+//     const categorySchema = new CategorySchema({ name: condition });
+//     await categorySchema.save();
+
+
+
+//     const offerList = new OfferList({
+//         idBookLibrary: bookLibrary._id,
+//         IBSN: isbn,
+//         yearPublishing: new Date(year)  // Assuming year is a number like 2023
+//         // You might need to pass idUser and idStatus depending on your requirements
+//     });
+//     await offerList.save();
+
+//     res.status(201).json({ message: 'Offer created successfully', offerList });
+// } catch (error) {
+//     res.status(500).json({ message: 'Error creating offer', error });
+// }
+// };
+
+export const exchangeBook = async (req, res) => {
+  try {
+    const {
+      author_surname,
+      author_name,
+      book_title,
+      isbn,
+      year,
+      genre,
+      condition,
+      userId,         // Assuming userId is passed in the request body
+    } = req.body;
+
+    // Create and save the author
+    let author = await Author.findOne({ lastName: author_surname, firstName: author_name });
+    if (!author) {
+      author = new Author({ lastName: author_surname, firstName: author_name });
+      await author.save();
+    }
+
+    let bookLibrary = await BookLibrary.findOne({ idAuthor: author._id, bookName: book_title });
+    if (!bookLibrary) {
+      bookLibrary = new BookLibrary({ idAuthor: author._id, bookName: book_title });
+      await bookLibrary.save();
+    }
+
+    // Create and save the category (you might want to check if the category already exists)
+    // const category = new CategorySchema({ category: genre }); // Make sure the field name is correct
+    // await category.save();
+
+    // Create and save the offer list entry
+    const offerList = new OfferList({
+      idBookLibrary: bookLibrary._id,
+      idUser: userId,                // Use the userId from the request body
+      IBSN: isbn,
+      yearPublishing: new Date(year), // Assuming year is a number like 2023
+      category: genre,     // If you want to link the category to the offer
+      status: condition
+    });
+    await offerList.save();
+
+    // Respond with success message
+    res.status(201).json({ message: 'Все правильно', offerList });
+  } catch (error) {
+    // Handle errors and respond appropriately
+    // res.status(500).json({ message: 'ошибка', error });
+    res.status(500).json({ message: 'Error creating offer', karp: req.body, error });
+  }
+>>>>>>> 928619264b8b7aa8b4914d860f594e6e6c087360
 };
