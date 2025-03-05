@@ -119,75 +119,7 @@ export const register = async (req, res) => {
   }
 };
 
-// export const exchangeBook = async (req, res) => {
-//   try {
-//     const { author_surname, author_name, book_title, isbn, year, genre, condition } = req.body;
-<<<<<<< HEAD
 
-//     const author = new Author({ lastName: author_surname, firstName: author_name });
-//     await author.save();
-
-//     const bookLibrary = new BookLibrary({ idAuthor: author._id, bookName: book_title });
-//     await bookLibrary.save();
-
-//     const categorySchema = new CategorySchema({ name: condition });
-//     await categorySchema.save();
-
-    
-
-//     const offerList = new OfferList({
-//         idBookLibrary: bookLibrary._id,
-//         IBSN: isbn,
-//         yearPublishing: new Date(year)  // Assuming year is a number like 2023
-//         // You might need to pass idUser and idStatus depending on your requirements
-//     });
-//     await offerList.save();
-
-//     res.status(201).json({ message: 'Offer created successfully', offerList });
-// } catch (error) {
-//     res.status(500).json({ message: 'Error creating offer', error });
-// }
-// };
-
-
-export const exchangeBook = async (req, res) => {
-  const { lastName, firstName, bookName, ISBN, yearPublishing, idCategory, idStatus } = req.body;
-
-  // console.log(idStatus)
-    try {
-        // Поиск или создание автора
-        let author = await Author.findOne({ lastName, firstName });
-        if (!author) {
-            author = new Author({ lastName, firstName });
-            await author.save();
-        }
-
-        // Создание записи о книге в библиотеке
-        const bookLibrary = new BookLibrary({
-            idAuthor: author._id,
-            bookName,
-            note: `ISBN: ${ISBN}, Year: ${yearPublishing}`
-        });
-        await bookLibrary.save();
-
-        // Создание записи о предложении
-        const offerList = new OfferList({
-            idBookLibrary: bookLibrary._id,
-            idUser: author._id,
-            IBSN: ISBN,
-            yearPublishing,
-            idCategory: 1, // предполагается, что это массив ID категорий
-            idStatus: 1 // предполагается, что это массив ID категорий
-        });
-
-        await offerList.save();
-
-        return res.status(201).json({ message: 'Книга успешно добавлена для обмена!', offerList });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: 'Ошибка при создании предложения о обмене.', error });
-    }
-=======
 
 //     const author = new Author({ lastName: author_surname, firstName: author_name });
 //     await author.save();
