@@ -50,7 +50,7 @@ export const changeUser = async (req, res) => {
         addrStructure,
         addrApart,
     } = req.body; // Извлекаем данные из тела запроса
-
+console.log(req.body)
     // Проверка: существует ли пользователь с указанным ID
     const user = await User.findById(idUser);
     if (!user) {
