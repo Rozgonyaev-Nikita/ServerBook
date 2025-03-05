@@ -147,5 +147,4 @@ export const register = async (req, res) => {
 // };
 
 
->>>>>>> 928619264b8b7aa8b4914d860f594e6e6c087360
-};
+
