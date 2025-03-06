@@ -63,7 +63,7 @@ export const exchangeBook = async (req, res) => {
   try {
     const { author_surname, author_name, book_title, isbn, year, genre, condition } = req.body;
 
-    const author = new Author({ lastName: author_surname, firstName: author_name });
+    const author = new Author({ lastName: author_surname, firstName: author_name });//сделать - если автор есть то идти дальше, если нет то добавить
     await author.save();
 
     const bookLibrary = new BookLibrary({ idAuthor: author._id, bookName: book_title });
@@ -72,7 +72,7 @@ export const exchangeBook = async (req, res) => {
     const offerList = new OfferList({
         idBookLibrary: bookLibrary._id,
         IBSN: isbn,
-        yearPublishing: new Date(year)  // Assuming year is a number like 2023
+        yearPublishing: new Date(year)  // Assuming year is a number like 2023 
         // You might need to pass idUser and idStatus depending on your requirements
     });
     await offerList.save();
