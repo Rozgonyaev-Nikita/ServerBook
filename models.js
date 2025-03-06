@@ -53,15 +53,14 @@ const OfferListSchema = new mongoose.Schema({
     required: true,
   },
   idUser: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  IBSN: { type: String, maxlength: 13 }, // isbn
+  IBSN: { type: String, maxlength: 23 },
   yearPublishing: { type: Date },
   createAt: { type: Date, default: Date.now },
   updateAt: { type: Date },
-  idStatus: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Status",
-    required: true,
-  },
+  // idCategory: [{type: mongoose.Schema.Types.ObjectId, ref: 'Category'}],
+  category: [{ type: String, maxlength: 25 }],
+  status: { type: String, enum: ["new", "old"] },
+  // idStatus: { type: mongoose.Schema.Types.ObjectId, ref: 'Status', required: true }
 });
 
 const WishListSchema = new mongoose.Schema({
@@ -147,8 +146,8 @@ const UserValueCategorySchema = new mongoose.Schema({
 
 const CategorySchema = new mongoose.Schema({
   //+
-  genre: [{ type: String, maxlength: 25 }],
-  condition: { type: Boolean, default: false },
+  category: { type: String, maxlength: 25 },
+  // condition: { type: Boolean, default: false }
 });
 
 const StatusSchema = new mongoose.Schema({
