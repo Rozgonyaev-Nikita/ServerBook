@@ -68,11 +68,8 @@ const WishListSchema = new mongoose.Schema({
   idUser: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   createAt: { type: Date, default: Date.now },
   updateAt: { type: Date },
-  idStatus: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Status",
-    required: true,
-  },
+  category: [{ type: String, maxlength: 25 }],
+  idStatus: { type: String, enum: ["new", "old"] },
   idUserAddress: { type: mongoose.Schema.Types.ObjectId, ref: "UserAddress" },
 });
 
@@ -171,18 +168,6 @@ const BookResponseSchema = new mongoose.Schema({
 const UserMsgSchema = new mongoose.Schema({
   //+
   idUser: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  createAt: { type: Date, default: Date.now },
-  text: { type: String, maxlength: 250 },
-  notes: { type: String, maxlength: 150 },
-  idStatus: { type: mongoose.Schema.Types.ObjectId, ref: "Status" },
-  type: { type: Number },
-});
-
-//RandomBookSchema
-const RandomBookSchem = new mongoose.Schema({
-  //+
-  idUser: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  idBook: { type: mongoose.Schema.Types.ObjectId, ref: "Book", required: true },
   createAt: { type: Date, default: Date.now },
   text: { type: String, maxlength: 250 },
   notes: { type: String, maxlength: 150 },

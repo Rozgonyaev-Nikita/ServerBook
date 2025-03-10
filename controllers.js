@@ -111,8 +111,7 @@ export const changeUser = async (req, res) => {
 
 export const register = async (req, res) => {
   try {
-    const { firstName, lastName, email, userName, password, ...otherData } =
-      req.body;
+    const { firstName, lastName, email, userName, password, ...otherData } = req.body;
     const existingUser = await User.findOne({ email });
     console.log("email", existingUser);
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -155,10 +154,33 @@ export const exchangeBook = async (req, res) => {
       book_title,
       isbn,
       year,
-      genre,
-      condition,
-      userId, // Assuming userId is passed in the request body
+      category,
+      status,
+      userId,
+
+      wishCategory,
+      wishStatus,
+
+      addCountry,
+      addrIndex,
+      addrCity,
+      addrStreet,
+      addrStructure,
+      addrApart,
+      isDefault,
     } = req.body;
+
+    let userAddress = new UserAddress({
+      idUser: userId,
+      addCountry,
+      addrIndex,
+      addrCity,
+      addrStreet,
+      addrStructure,
+      addrApart,
+      isDefault,
+    });
+    await userAddress.save();
 
     // Create and save the author
     let author = await Author.findOne({
@@ -169,6 +191,7 @@ export const exchangeBook = async (req, res) => {
       author = new Author({ lastName: author_surname, firstName: author_name });
       await author.save();
     }
+
     let bookLibrary = await BookLibrary.findOne({
       idAuthor: author._id,
       bookName: book_title,
@@ -180,22 +203,59 @@ export const exchangeBook = async (req, res) => {
       });
       await bookLibrary.save();
     }
+
     // Create and save the offer list entry
     const offerList = new OfferList({
       idBookLibrary: bookLibrary._id,
-      idUser: userId, // Use the userId from the request body
+      idUser: userId,
       IBSN: isbn,
-      yearPublishing: new Date(year), // Assuming year is a number like 2023
+      yearPublishing: new Date(year),
+      category,
+      status
     });
     await offerList.save();
 
-    // Respond with success message
-    res.status(201).json({ message: "Все правильно", offerList });
+    const wishList = new WishList({
+      idUser: userId,
+      category: wishCategory,
+      status,
+      userAddress: userAddress._id,
+    });
+    await wishList.save();
+
+    const alienWish = await WishList.findOne({
+      _id: { $ne: userId },
+      $and: [
+        { category: { $in: category } },
+        { status: status }
+      ]
+    });
+
+    if (alienWish) {
+      const alienOffer = await OfferList.findOne({
+        idUser: alienWish.idUser,
+        $and: [
+          { category: { $in: wishCategory } },
+          { status: wishStatus }
+        ]
+      });
+
+      if (alienOffer) {
+        const exchangeList = new ExchangeList({
+          idOfferList1: offerList._id,
+          idWishList1: wishList._id,
+          idOfferList2: alienWish._id,
+          idWishList2: alienOffer._id,
+          isBoth: true
+        });
+        await exchangeList.save(); // Save the exchange list if necessary
+        return res.status(201).json({ message: "Обмен совершен", offerList });
+      }
+    }
+
+    return res.status(201).json({ message: "Обмен в ожидании", offerList });
   } catch (error) {
-    // Handle errors and respond appropriately
-    // res.status(500).json({ message: 'ошибка', error });
-    res
-      .status(500)
-      .json({ message: "Error creating offer", karp: req.body, error });
+    return res.status(500).json({ message: "Error creating offer", karp: req.body, error });
   }
 };
+
