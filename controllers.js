@@ -50,28 +50,24 @@ export const login = async (req, res) => {
 };
 
 export const getUserData = async (req, res) => {
-  const { userName, password } = req.query;
+  const { userName } = req.query;
 
   try {
     // Находим пользователя по логину
     const user = await User.findOne({ userName });
 
     if (user) {
-        // отправляем все кроме пароля
-        const { user } = user.toObject();
-        res.json(user);
-
+      // отправляем все кроме пароля
+      const { password, ...userData } = user.toObject(); // Извлекаем пароль и сохраняем остальные данные в userData
+      res.json(userData); // Отправляем только данные пользователя без пароля
     } else {
       // Пользователь не найден
-      // res.json(false);
       res.status(404).json({ message: "Пользователь не найден" });
     }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Внутренняя ошибка сервера" });
   }
-
-  console.log(login, password);
 };
 
 export const changeUser = async (req, res) => {
