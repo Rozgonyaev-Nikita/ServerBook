@@ -55,11 +55,16 @@ export const getUserData = async (req, res) => {
   try {
     // Находим пользователя по логину
     const user = await User.findOne({ userName });
+    console.log(user.userName)
+    const add = await UserAddress.findOne({ idUser: user._id }).populate("idUser");
+    console.log(add)
 
-    if (user) {
+    if (add) {
       // отправляем все кроме пароля
-      const { password, ...userData } = user.toObject(); // Извлекаем пароль и сохраняем остальные данные в userData
-      res.json(userData); // Отправляем только данные пользователя без пароля
+      // const {...add2  } = add.toObject(); // Извлекаем пароль и сохраняем остальные данные в userData
+      const resData = { ...add.toObject(), ...add.idUser.toObject() };
+      delete resData.idUser;
+      res.json(resData); // Отправляем только данные пользователя без пароля
     } else {
       // Пользователь не найден
       res.status(404).json({ message: "Пользователь не найден" });
