@@ -49,7 +49,37 @@ export const login = async (req, res) => {
   console.log(login, password);
 };
 
+export const getBooks = async (req, res) => {
+  try {
+    const userName = req.params.userName;
 
+    // Находим пользователя по userName
+    const user = await User.findOne({ userName: userName });
+    if (!user) {
+        return res.status(404).json({ message: 'Пользователь не найден' });
+    }
+
+    // Находим книги, которые этот пользователь готов обменивать
+    const offers = await OfferList.find({ idUser: user._id }).populate({
+        path: 'idBookLibrary',
+        populate: {
+            path: 'idAuthor',
+            model: Author  // Здесь мы получаем автора книги
+        }
+    });
+
+    // Формируем ответ
+    const booksForExchange = offers.map(offer => ({
+        bookName: offer.idBookLibrary.bookName,
+        author: offer.idBookLibrary.idAuthor
+    }));
+
+    res.status(200).json(booksForExchange);
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Произошла ошибка на сервере' });
+}
+}
 
 export const getUserData = async (req, res) => {
   const { userName } = req.query;
