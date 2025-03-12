@@ -51,7 +51,9 @@ export const login = async (req, res) => {
 
 export const getBooks = async (req, res) => {
   try {
-    const userName = req.params.userName;
+    console.log("cvfhghdfgcfhtx");
+    const {userName} = req.query;
+    
 
     // Находим пользователя по userName
     const user = await User.findOne({ userName: userName });
