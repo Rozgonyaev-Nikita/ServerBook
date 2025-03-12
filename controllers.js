@@ -49,6 +49,8 @@ export const login = async (req, res) => {
   console.log(login, password);
 };
 
+
+
 export const getUserData = async (req, res) => {
   const { userName } = req.query;
 
@@ -244,7 +246,7 @@ export const exchangeBook = async (req, res) => {
     const wishList = new WishList({
       idUser: userId,
       category: wishCategory,
-      status,
+      status: wishStatus,
       userAddress: userAddress._id,
     });
     await wishList.save();
