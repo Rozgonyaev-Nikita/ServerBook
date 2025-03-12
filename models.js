@@ -69,7 +69,7 @@ const WishListSchema = new mongoose.Schema({
   createAt: { type: Date, default: Date.now },
   updateAt: { type: Date },
   category: [{ type: String, maxlength: 25 }],
-  idStatus: { type: String, enum: ["new", "old"] },
+  status: { type: String, enum: ["new", "old"] },
   idUserAddress: { type: mongoose.Schema.Types.ObjectId, ref: "UserAddress" },
 });
 
