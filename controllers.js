@@ -371,7 +371,7 @@ export const exchangeBook = async (req, res) => {
 
 
 
-export const getBooksByUserName = async (req, res) => {
+export const getBooksSdelka = async (req, res) => {
   try {
       const { idUser } = req.query;
 
