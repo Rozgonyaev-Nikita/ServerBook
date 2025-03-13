@@ -1,9 +1,5 @@
 import express from "express";
-<<<<<<< HEAD
-import { login, register, exchangeBook, changeUser, getUserData, getOfferBooks, getWishBooks} from "./controllers.js";
-=======
-import { login, register, exchangeBook, changeUser, getUserData, getOfferBooks, getBooksSdelka} from "./controllers.js";
->>>>>>> d59d6711971dd5197f92d0786ab185eaf1befaf4
+import { login, register, exchangeBook, changeUser, getUserData, getOfferBooks, getWishBooks, getBooksSdelka} from "./controllers.js";
 
 const router = express.Router();
 
