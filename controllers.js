@@ -15,6 +15,7 @@ import {
   UserValueCategory,
   WishList,
 } from "./models.js";
+import mongoose from 'mongoose';  // Если используете ES6 модули
 
 export const login = async (req, res) => {
   const { userName, password } = req.query;
@@ -319,3 +320,86 @@ export const exchangeBook = async (req, res) => {
   }
 };
 
+
+
+export const getBooksByUserName = async (req, res) => {
+  try {
+      const { idUser } = req.query;
+
+      // 1. Validate ObjectId
+      if (!mongoose.Types.ObjectId.isValid(idUser)) {
+          return res.status(400).json({ message: "Invalid user ID" });
+      }
+
+      // 2. Aggregate Query
+      const result = await ExchangeList.aggregate([
+          // Lookup for the first OfferList
+          {
+              $lookup: {
+                  from: "offerlists",
+                  localField: "idOfferList1",
+                  foreignField: "_id",
+                  as: "offer1"
+              }
+          },
+          { $unwind: "$offer1" },
+          
+          // Lookup for the second OfferList
+          // {
+          //     $lookup: {
+          //         from: "offerlists",
+          //         localField: "idOfferList2",
+          //         foreignField: "_id",
+          //         as: "offer2"
+          //     }
+          // },
+          // { $unwind: "$offer2" },
+          
+          // Match the offers by user ID (either offer1 or offer2)
+          {
+              $match: 
+                      { "offer1.idUser": new mongoose.Types.ObjectId(idUser) },
+              
+          },
+          
+          // Lookup for the first book
+          {
+              $lookup: {
+                  from: "booklibraries",
+                  localField: "offer1.idBookLibrary",
+                  foreignField: "_id",
+                  as: "book1"
+              }
+          },
+          { $unwind: "$book1" },
+          {
+            $lookup: {
+                from: 'authors', // название коллекции авторов
+                localField: 'book1.idAuthor', // поле для соединения из основной коллекции
+                foreignField: '_id', // поле для соединения из коллекции авторов
+                as: 'author' // имя для массива с результатами соединения
+            }
+        },
+        {
+            $unwind: { // распаковываем массив author, чтобы получить объект
+                path: '$author',
+                preserveNullAndEmptyArrays: true // если автор не найден, оставляем поле пустым
+            }
+        },
+          
+          // Project the required fields
+          {
+              $project: {
+                  _id: 0,
+                  bookName1: "$book1.bookName",
+                  author: "$author" // теперь это полный объект автора
+              }
+          }
+      ]);
+
+      res.json(result);
+      
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+};
