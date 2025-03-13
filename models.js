@@ -118,7 +118,7 @@ const UserExchangeListSchema = new mongoose.Schema({
 const UserListSchema = new mongoose.Schema({
   //---------------------- ref куда?
   typeList: { type: Number, required: true },
-  // IdList: { type: mongoose.Schema.Types.ObjectId, required: true }    возможно стоит ссылаться на userScheme
+  // IdList: { type: mongoose.Schema.Types.ObjectId, required: true }    
 });
 
 const UserValueCategorySchema = new mongoose.Schema({

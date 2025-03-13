@@ -132,6 +132,127 @@ export const getOfferBooks = async (req, res) => {
   }
 }
 
+// const WishListSchema = new mongoose.Schema({
+//   //+
+//   idUser: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+//   createAt: { type: Date, default: Date.now },
+//   updateAt: { type: Date },
+//   category: [{ type: String, maxlength: 25 }],
+//   status: { type: String, enum: ["new", "old"] },
+//   idUserAddress: { type: mongoose.Schema.Types.ObjectId, ref: "UserAddress" },
+// });
+
+// export const getWishBooks = async (req, res) => {
+//   try {
+//     const idUser = req.params.idUser;
+
+//     // Находим пользователя по userName
+//     const user = await User.findOne({ idUser: idUser });
+//     if (!user) {
+//         return res.status(404).json({ message: 'Пользователь не найден' });
+//     }
+
+//     const exchangeLists = await ExchangeList.find().populate({
+//       path: 'idOfferList1',
+//       populate: {
+//         path: 'idBookLibrary',
+//         model: BookLibrary
+//       }
+//     });
+
+//     const exchangedBooks = exchangeLists.flatMap(exchange => exchange.idWishList1.idUser);
+ 
+//     const offers = await WishList.find({ idUser: user._id })
+
+//     // Формируем ответ
+//     const booksForExchange = offers.map(offer => ({
+//         // bookName: offer.idBookLibrary.bookName,
+//         // author: offer.idBookLibrary.idAuthor,
+//         category: offer.category,
+//         status: offer.status
+//     }));
+
+//     const filteredBooks = booksForExchange.filter(book =>
+//       !exchangedBooks.some(exchangedBook => exchangedBook._id.equals(book.bookId))
+//     );
+
+//     res.status(200).json(filteredBooks);
+// } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Произошла ошибка на сервере' });
+// }
+// }
+// export const getWishBooks = async (req, res) => {
+//   try {
+//     const idUser = req.params.idUser;
+
+//     // Находим пользователя по userName
+//     const user = await User.findOne({ idUser: idUser });
+//     if (!user) {
+//         return res.status(404).json({ message: 'Пользователь не найден' });
+//     }
+
+//     const exchangeLists = await ExchangeList.find().populate({
+//       path: 'idOfferList1',
+//       populate: {
+//         path: 'idBookLibrary',
+//         model: BookLibrary
+//       }
+//     });
+
+//     const exchangedBooks = exchangeLists.flatMap(exchange => exchange.idWishList1.idUser);
+ 
+//     const offers = await WishList.find({ idUser: user._id })
+
+//     // Формируем ответ
+//     const booksForExchange = offers.map(offer => ({
+//         // bookName: offer.idBookLibrary.bookName,
+//         // author: offer.idBookLibrary.idAuthor,
+//         category: offer.category,
+//         status: offer.status
+//     }));
+
+//     const filteredBooks = booksForExchange.filter(book =>
+//       !exchangedBooks.some(exchangedBook => exchangedBook._id.equals(book.bookId))
+//     );
+
+//     res.status(200).json(filteredBooks);
+// } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Произошла ошибка на сервере' });
+// }
+// }
+
+export const getWishBooks = async (req, res) => {
+  
+    const { idUser } = req.query;
+    try {
+      // Первое: находим все обмены для данного idUser
+      const exchangeLists = await ExchangeList.find({ 
+        $or: [
+          { idWishList1: idUser },
+          // Можно добавить другие условия для поиска в зависимости от ваших требований
+        ]
+      }).exec();
+    
+      // Второе: создаем массив идентификаторов из найденных ExchangeList
+      const exchangeListIds = exchangeLists.map(item => item.idWishList1.toString());
+    
+      // Третье: теперь находим все категории и статусы из WishList, которые не содержатся в найденных exchangeList
+      const wishLists = await WishList.find({
+        idUser: idUser,
+        idWishList1: { $nin: exchangeListIds } // ищем те, что не в exchangeList
+      }).select('category status').exec(); // выбираем только нужные поля
+  
+      return res.status(200).json(wishLists);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ error: 'Ошибка сервера' });
+    }
+
+    
+  
+}
 export const getUserData = async (req, res) => {
   const { userName } = req.query;
 
