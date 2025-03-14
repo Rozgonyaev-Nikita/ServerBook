@@ -358,14 +358,13 @@ export const register = async (req, res) => {
     const result = await user.save();
 
     if (result) {
-      // delete result.password;
       res.send({
         ...otherData,
         firstName,
         lastName,
         email,
         userName,
-        password: hashedPassword,
+        _id: result._id // Добавляем _id в ответ
       });
       console.log(result);
     } else {
